@@ -35,8 +35,8 @@ const NavBar = (props: Props) => {
                                 Clientes
                             </NavLink>
                             <NavLink
-                                href={route('dashboard')}
-                                active={route().current('dashboard')}
+                                href={route('orders.index')}
+                                active={route().current('orders.*')}
                             >
                                 Ordens
                             </NavLink>

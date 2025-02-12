@@ -48,7 +48,6 @@ class CustomerController extends Controller
         $data['id'] = Customer::latest()->first()->id + 1;
         Customer::create($data);
         return Redirect::route('customers.index')->with(['title' => 'Cadastra Cliente', 'success' => 'Cliente cadastrado com sucesso']);
-
     }
 
     /**

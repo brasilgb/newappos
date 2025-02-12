@@ -7,61 +7,46 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { maskCep, maskCpfCnpj, maskDate, maskPhone, unMask } from '@/Utils/mask';
+import { maskCep, maskCpfCnpj, maskPhone } from '@/Utils/mask';
 import { Head, useForm } from '@inertiajs/react';
 import React, { FormEventHandler } from 'react';
-import { IoHome, IoPeople, IoPerson, IoSave } from 'react-icons/io5';
+import { IoPeople, IoPerson, IoSave } from 'react-icons/io5';
 
-const Create = () => {
+const Edit = ({ customer }: any) => {
 
-    const { data, setData, post, errors, processing, reset, clearErrors } = useForm({
-        'name': '',
-        'birth': '',
-        'cpf': '',
-        'mail': '',
-        'cep': '',
-        'uf': '',
-        'city': '',
-        'neighborhood': '',
-        'street': '',
-        'complement': '',
-        'number': '',
-        'phone': '',
-        'contact': '',
-        'whatsapp': '',
-        'phonecontact': '',
-        'obs': ''
+    const { data, setData, patch, errors, processing, reset, clearErrors } = useForm({
+        'name': customer?.name,
+        'birth': customer?.birth,
+        'cpf': customer?.cpf,
+        'mail': customer?.mail,
+        'cep': customer?.cep,
+        'uf': customer?.uf,
+        'city': customer?.city,
+        'neighborhood': customer?.neighborhood,
+        'street': customer?.street,
+        'complement': customer?.complement,
+        'number': customer?.number,
+        'phone': customer?.phone,
+        'contact': customer?.contact,
+        'whatsapp': customer?.whatsapp,
+        'phonecontact': customer?.phonecontact,
+        'obs': customer?.obs
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('customers.store'), {
-            onSuccess: () => reset(),
-        });
+        patch(route('customers.update', customer?.id));
     }
-    
-    const getCep = (cep: string) => {
-        const cleanCep = unMask(cep);
-        fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
-            .then((response) => response.json())
-            .then((result) => {
-                setData((data) => ({ ...data, uf: result.uf }));
-                setData((data) => ({ ...data, city: result.localidade }));
-                setData((data) => ({ ...data, neighborhood: result.bairro }));
-                setData((data) => ({ ...data, street: result.logradouro }));
-                setData((data) => ({
-                    ...data,
-                    complement: result.complemento,
-                }));
-            })
-            .catch((error) => console.error(error));
-    };
+
+    const backPage = () => {
+        route('customers.index')
+    }
 
     return (
         <Authenticated
             header={
                 <HeaderTop
-                    icon={<IoHome />}
+                    icon={<IoPeople />}
                     title='Clientes'
                     breadcrumb={
                         <BreadCrumbTop
@@ -104,7 +89,7 @@ const Create = () => {
                                     onChange={(e) => setData('cpf', e.target.value)}
                                     onFocus={() => clearErrors('cpf')}
                                     autoComplete="cpf"
-                                    maxLength={15}
+                                    maxLength={11}
                                 />
                                 <InputError className="mt-2" message={errors.cpf} />
                             </div>
@@ -140,7 +125,6 @@ const Create = () => {
                                     className="mt-1 block w-full"
                                     value={maskCep(data.cep)}
                                     onChange={(e) => setData('cep', e.target.value)}
-                                    onBlur={(e) => getCep(e.target.value)}
                                     autoComplete="cep"
                                     maxLength={9}
                                 />
@@ -275,4 +259,4 @@ const Create = () => {
     )
 }
 
-export default Create;
+export default Edit;
