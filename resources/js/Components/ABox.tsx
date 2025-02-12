@@ -7,7 +7,7 @@ interface ABoxProps {
 
 const ABoxContainer = ({ children }: ABoxProps) => {
     return (
-        <div className="py-6">
+        <div className="py-4">
             <div className="mx-auto container">
                 <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     {children}

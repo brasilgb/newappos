@@ -3,13 +3,18 @@ import IconButton from '@/Components/IconButton';
 import SearchInput from '@/Components/SearchInput';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { IoAdd, IoTrash } from 'react-icons/io5';
+import { IoAdd, IoConstruct, IoPeople, IoTrash } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect } from 'react';
 import ToastMessage from '@/Components/ToastMessages/message';
 import { ATable, ATBody, ATd, ATh, ATHead, ATr } from '@/Components/ATables';
 import DeleteButton from '@/Components/DeleteModal';
 import Pagination from '@/Components/Pagination';
+import { BiEdit } from 'react-icons/bi';
+import HeaderTop from '@/Components/HeaderTop';
+import { BreadCrumbTop } from '@/Components/BreadCrumbTop';
+import { maskCnpj, maskCpfCnpj, maskPhone } from '@/Utils/mask';
+import moment from 'moment';
 
 const Customers = ({ customers, flash }: any) => {
 
@@ -40,22 +45,32 @@ const Customers = ({ customers, flash }: any) => {
   return (
     <Authenticated
       header={
-        <h2 className="text-xl font-semibold leading-tight text-gray-800">
-          Clientes
-        </h2>}
+        <HeaderTop
+          icon={<IoPeople />}
+          title='Clientes'
+          breadcrumb={
+            <BreadCrumbTop
+              links={[
+                { url: null, label: "Clientes" },
+              ]}
+            />
+          }
+        />
+      }
     >
       <Head title="Clientes" />
       <ToastContainer />
       <ABoxContainer>
         <ABoxHead>
           <div>
-            <SearchInput placeholder={''} url="customers.index" />
+            <SearchInput placeholder="Buscar por nome ou CPF/CNPJ" url="customers.index" />
           </div>
           <div>
             <IconButton
+              title="Inserir cliente"
               href={route('customers.create')}
             >
-              <IoAdd size={18} />
+              <IoAdd size={20} />
             </IconButton>
           </div>
         </ABoxHead>
@@ -78,11 +93,25 @@ const Customers = ({ customers, flash }: any) => {
                   <ATd>{customer.id}</ATd>
                   <ATd>{customer.name}</ATd>
                   <ATd>{customer.mail}</ATd>
-                  <ATd>{customer.cpf}</ATd>
-                  <ATd>{customer.phone}</ATd>
-                  <ATd>{customer.created_at}</ATd>
+                  <ATd>{maskCpfCnpj(customer.cpf)}</ATd>
+                  <ATd>{maskPhone(customer.phone)}</ATd>
+                  <ATd>{moment(customer.created_at).format("DD/MM/YYYY")}</ATd>
                   <ATd>
-                    <DeleteButton param={customer.id} action="este usuário" />
+                    <p className='flex justify-end gap-2'>
+                      <IconButton
+                        variant="order"
+                        href={route('customers.edit', customer.id)}
+                      >
+                        <IoConstruct size={18} />
+                      </IconButton>
+                      <IconButton
+                        variant="edit"
+                        href={route('customers.edit', customer.id)}
+                      >
+                        <BiEdit size={18} />
+                      </IconButton>
+                      <DeleteButton param={customer.id} action="este usuário" />
+                    </p>
                   </ATd>
                 </ATr>
               ))}
