@@ -11,7 +11,7 @@ class OrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+            'customer_id' => 'required',
+            'equipment' => 'required',
+            'defect' => 'required',
+        ];
+    }
+    public function attributes(): array
+    {
+        return [
+            'customer_id' => 'cliente',
+            'equipment' => 'equipamento',
+            'defect' => 'defeito',
         ];
     }
 }

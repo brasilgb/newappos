@@ -15,6 +15,8 @@ import HeaderTop from '@/Components/HeaderTop';
 import { BreadCrumbTop } from '@/Components/BreadCrumbTop';
 import { maskCnpj, maskCpfCnpj, maskPhone } from '@/Utils/mask';
 import moment from 'moment';
+import { statusOrdemByValue } from '@/Utils/functions';
+import { colorStatus } from '@/Components/colors';
 
 const Orders = ({ orders, flash }: any) => {
 
@@ -85,7 +87,6 @@ const Orders = ({ orders, flash }: any) => {
                 <ATh>Equipamento</ATh>
                 <ATh>Modelo</ATh>
                 <ATh>Status</ATh>
-                <ATh>Cadastro</ATh>
                 <ATh>Entrega</ATh>
                 <ATh><></></ATh>
               </ATr>
@@ -94,11 +95,13 @@ const Orders = ({ orders, flash }: any) => {
               {orders.data?.map((order: any) => (
                 <ATr key={order.id}>
                   <ATd>{order.id}</ATd>
-                  <ATd>{order.customers.name}</ATd>
-                  <ATd>{order.mail}</ATd>
-                  <ATd>{maskCpfCnpj(order.cpf)}</ATd>
-                  <ATd>{maskPhone(order.phone)}</ATd>
+                  <ATd>{order.customer.name}</ATd>
+                  <ATd>{maskPhone(order.customer.phone)}</ATd>
                   <ATd>{moment(order.created_at).format("DD/MM/YYYY")}</ATd>
+                  <ATd>{order.equipment}</ATd>
+                  <ATd>{order.model}</ATd>
+                  <ATd><span className={colorStatus(order.service_status)}>{statusOrdemByValue(order.service_status)}</span></ATd>
+                  <ATd>{order.delivery_date && moment(order.delivery_date).format("DD/MM/YYYY")}</ATd>
                   <ATd>
                     <p className='flex justify-end gap-2'>
                       <IconButton

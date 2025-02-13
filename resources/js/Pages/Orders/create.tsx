@@ -6,17 +6,22 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import TextTextarea from '@/Components/TextTextarea';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { statusOrcamento } from '@/Utils/dataSelect';
-import { maskCep, maskCpfCnpj, maskDate, maskPhone, unMask } from '@/Utils/mask';
+import { equipamento, statusOrcamento } from '@/Utils/dataSelect';
+import { maskMoney, maskMoneyDot } from '@/Utils/mask';
 import { Head, useForm } from '@inertiajs/react';
-import React, { FormEventHandler } from 'react';
-import { IoHome, IoPeople, IoPerson, IoSave } from 'react-icons/io5';
+import { FormEventHandler, useState } from 'react';
+import { IoHome, IoSave } from 'react-icons/io5';
 import Select from 'react-select';
 
 const Create = ({ customers }: any) => {
 
-    const options = customers.map((customer: any) => ({
+    const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
+    const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
+    const [selectedStatus, setSelectedStatus] = useState<any>(null);
+
+    const optionsCustomer = customers.map((customer: any) => ({
         value: customer.id,
         label: customer.name,
     }));
@@ -31,30 +36,30 @@ const Create = ({ customers }: any) => {
         'accessories': '',
         'budget_description': '', // descrição do orçamento
         'budget_value': '', // valor do orçamento
-        'services_performed': '', // servicos executados
-        'parts': '',
-        'parts_value': '',
-        'service_value': '',
-        'service_cost': '', // custo
-        'delivery_forecast': '', // previsao de entrega
         'service_status': '',
-        'delivery_date': '', // data de entrega
-        'responsible_technician': '', // tecnico
-        'observations': ''
+        'delivery_forecast': '', // previsao de entrega
+        'observations': '',
     });
-    const handleChange = (selected: any) => {
-        setData(
-          'customer_id',
-          selected.map((v: any) => v.value)
-        );
-      };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
+        setData('budget_value', maskMoneyDot(data?.budget_value));
         post(route('orders.store'), {
             onSuccess: () => reset(),
         });
     }
+
+    const changeCustomer = (selected: any) => {
+        setData('customer_id', selected?.value);
+    }
+
+    const changeEquipment = (selected: any) => {
+        setData('equipment', selected?.value);
+    };
+
+    const changeServiceStatus = (selected: any) => {
+        setData('service_status', selected?.value);
+    };
 
     return (
         <Authenticated
@@ -76,44 +81,66 @@ const Create = ({ customers }: any) => {
             <Head title="Ordens" />
             <ABoxContainer>
                 <ABoxHead>
-                    <BackButton href="customers.index">Cancelar</BackButton>
+                    <BackButton href="orders.index">Cancelar</BackButton>
                 </ABoxHead>
-                <form onSubmit={submit}>
+                <form onSubmit={submit} autoComplete='off'>
                     <ABoxContent className='p-3'>
-                        <div className='sm:grid grid-cols-6 gap-4 sm:mt-4'>
+                        <div className='sm:grid grid-cols-8 gap-4 sm:mt-4'>
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="name" value="Cliente" />
                                 <Select
-                                    options={options}
-                                    onChange={handleChange}
+                                    options={optionsCustomer}
+                                    onChange={changeCustomer}
                                     placeholder="Selecione o cliente"
                                     styles={{
-                                        multiValueLabel: base => ({
+                                        control: (baseStyles, state) => ({
+                                            ...baseStyles,
+                                            fontSize: '15px',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                            marginTop: '4px'
+                                        }),
+                                        dropdownIndicator: (base) => ({
                                             ...base,
-                                            backgroundColor: '#00AEEF',
-                                            color: 'white',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            fontSize: '14px',
                                         }),
                                     }}
                                 />
                                 <InputError className="mt-2" message={errors.customer_id} />
                             </div>
-                            <div>
+                            <div className='col-span-2'>
                                 <InputLabel htmlFor="equipment" value="Tipo de equipamento" />
                                 <Select
-                                    options={options}
-                                    onChange={handleChange}
+                                    options={equipamento}
+                                    onChange={changeEquipment}
                                     placeholder="Selecione o equipamento"
                                     styles={{
-                                        multiValueLabel: base => ({
+                                        control: (baseStyles, state) => ({
+                                            ...baseStyles,
+                                            fontSize: '15px',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                            marginTop: '4px'
+                                        }),
+                                        dropdownIndicator: (base) => ({
                                             ...base,
-                                            backgroundColor: '#00AEEF',
-                                            color: 'white',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            fontSize: '14px',
                                         }),
                                     }}
                                 />
                                 <InputError className="mt-2" message={errors.equipment} />
                             </div>
-                            <div>
+                            <div className='col-span-2'>
                                 <InputLabel htmlFor="model" value="Modelo do equipamento" />
                                 <TextInput
                                     id="model"
@@ -123,7 +150,7 @@ const Create = ({ customers }: any) => {
                                     autoComplete="model"
                                 />
                             </div>
-                            <div className='col-span-2'>
+                            <div className=''>
                                 <InputLabel htmlFor="password" value="Senha" />
                                 <TextInput
                                     id="password"
@@ -133,35 +160,34 @@ const Create = ({ customers }: any) => {
                                     onFocus={() => clearErrors('password')}
                                     autoComplete="password"
                                 />
-                                <InputError className="mt-2" message={errors.password} />
                             </div>
-                        </div>
-                        <div className='sm:grid grid-cols-7 gap-4 sm:mt-4'>
                             <div>
                                 <InputLabel htmlFor="delivery_forecast" value="Previsão de entrega" />
                                 <TextInput
-                                type='datetime-local'
+                                    type='date'
                                     id="delivery_forecast"
                                     className="mt-1 block w-full"
-                                    value={maskCep(data.delivery_forecast)}
+                                    value={data.delivery_forecast}
                                     onChange={(e) => setData('delivery_forecast', e.target.value)}
                                     autoComplete="delivery_forecast"
-                                    maxLength={9}
                                 />
                             </div>
+                        </div>
+                        <div className='sm:grid grid-cols-3 gap-4 sm:mt-4'>
                             <div>
                                 <InputLabel htmlFor="defect" value="Defeito relatado" />
-                                <TextInput
+                                <TextTextarea
                                     id="defect"
                                     className="mt-1 block w-full"
                                     value={data.defect}
                                     onChange={(e) => setData('defect', e.target.value)}
                                     autoComplete="defect"
                                 />
+                                <InputError className="mt-2" message={errors.defect} />
                             </div>
-                            <div className='col-span-3'>
+                            <div>
                                 <InputLabel htmlFor="state_conservation" value="Estado de conservação" />
-                                <TextInput
+                                <TextTextarea
                                     id="state_conservation"
                                     className="mt-1 block w-full"
                                     value={data.state_conservation}
@@ -169,9 +195,9 @@ const Create = ({ customers }: any) => {
                                     autoComplete="state_conservation"
                                 />
                             </div>
-                            <div className='col-span-2'>
+                            <div>
                                 <InputLabel htmlFor="accessories" value="Acessórios" />
-                                <TextInput
+                                <TextTextarea
                                     id="accessories"
                                     className="mt-1 block w-full"
                                     value={data.accessories}
@@ -183,7 +209,7 @@ const Create = ({ customers }: any) => {
                         <div className='sm:grid grid-cols-5 gap-4 sm:mt-4'>
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="budget_description" value="Descrição pré-orçamento" />
-                                <TextInput
+                                <TextTextarea
                                     id="budget_description"
                                     className="mt-1 block w-full"
                                     value={data.budget_description}
@@ -196,7 +222,7 @@ const Create = ({ customers }: any) => {
                                 <TextInput
                                     id="budget_value"
                                     className="mt-1 block w-full"
-                                    value={data.budget_value}
+                                    value={maskMoney(data.budget_value)}
                                     onChange={(e) => setData('budget_value', e.target.value)}
                                     autoComplete="budget_value"
                                 />
@@ -205,13 +231,24 @@ const Create = ({ customers }: any) => {
                                 <InputLabel htmlFor="service_status" value="Status do orçamento" />
                                 <Select
                                     options={statusOrcamento}
-                                    onChange={handleChange}
-                                    placeholder="Selecione o equipamento"
+                                    onChange={changeServiceStatus}
+                                    placeholder="Selecione o status"
                                     styles={{
-                                        multiValueLabel: base => ({
+                                        control: (baseStyles, state) => ({
+                                            ...baseStyles,
+                                            fontSize: '15px',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                            marginTop: '4px'
+                                        }),
+                                        dropdownIndicator: (base) => ({
                                             ...base,
-                                            backgroundColor: '#00AEEF',
-                                            color: 'white',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            fontSize: '14px',
                                         }),
                                     }}
                                 />
@@ -219,7 +256,7 @@ const Create = ({ customers }: any) => {
                         </div>
                         <div className='my-4'>
                             <InputLabel htmlFor="observations" value="Observações" />
-                            <textarea
+                            <TextTextarea
                                 id="observations"
                                 className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
                                 value={data.observations}

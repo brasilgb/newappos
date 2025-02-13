@@ -63,5 +63,5 @@ export {
     statusUserByValue,
     roleUserByValue,
     statusAgendaByValue,
-    statusMessageByValue,
+    statusMessageByValue
 };

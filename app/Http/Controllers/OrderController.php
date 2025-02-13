@@ -18,10 +18,9 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('q');
-        $query = Order::with('customers')->orderBy('id', 'DESC');
+        $query = Order::with('customer')->orderBy('id', 'DESC');
         if ($search) { 
-            $query->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('cpf', 'like', '%' . $search . '%');
+            $query->where('id', 'like', '%' . $search . '%');
         }
         $orders = $query->paginate(12)->withQueryString();
         return Inertia::render('Orders/index', ['orders' => $orders]);
@@ -44,9 +43,9 @@ class OrderController extends Controller
     {
         $data = $request->all();
         $validated = $request->validated();
-        $data['id'] = Order::latest()->first()->id + 1;
+        $data['id'] = Order::exists() ? Order::latest()->first()->id + 1 : 1;
         Order::create($data);
-        return Redirect::route('orders.index')->with(['title' => 'Cadastra Ordem', 'success' => 'Ordem cadastrada com sucesso']);
+        return Redirect::route('orders.index')->with(['title' => 'Cadastrar Ordem', 'success' => 'Ordem cadastrada com sucesso']);
     }
 
     /**

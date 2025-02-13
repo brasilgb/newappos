@@ -64,7 +64,7 @@ const Edit = ({ customer }: any) => {
                 <ABoxHead>
                     <BackButton href="customers.index">Cancelar</BackButton>
                 </ABoxHead>
-                <form onSubmit={submit}>
+                <form onSubmit={submit} autoComplete='off'>
                     <ABoxContent className='p-3'>
                         <div className='sm:grid grid-cols-6 gap-4 sm:mt-4'>
                             <div className='col-span-2'>

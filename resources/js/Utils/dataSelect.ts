@@ -52,8 +52,13 @@ const statusMessage = [
 ];
 
 const statusOrcamento = [
-    { value: '3', label: "Orçamento Gerado" },
-    { value: '4', label: "Orçamento Aprovado" },
+    { value: 3, label: "Orçamento Gerado" },
+    { value: 4, label: "Orçamento Aprovado" },
+];
+
+const equipamento = [
+    { value: 1, label: "PC" },
+    { value: 2, label: "Mobile" },
 ];
 
 export {
@@ -65,5 +70,6 @@ export {
     tiposProdutos,
     statusAgenda,
     statusMessage,
-    statusOrcamento
+    statusOrcamento,
+    equipamento
 };
