@@ -1,4 +1,4 @@
-function maskCep(value: string) {
+function maskCep(value: any) {
     if (value) {
         value = value.replace(/\D/g, "");
         value = value.replace(/^(\d{5})(\d)/, "$1-$2");
@@ -6,7 +6,7 @@ function maskCep(value: string) {
     }
 }
 
-function maskPhone(value: string) {
+function maskPhone(value: any) {
     if (value) {
         if (value.length < 11) {
             value = value.replace(/\D/g, "");
@@ -20,7 +20,7 @@ function maskPhone(value: string) {
     }
 }
 
-function maskWhatsApp(value: string) {
+function maskWhatsApp(value: any) {
     if (value) {
             value = value.replace(/\D/g, "");
             value = value.replace(/^(\d{2})(\d{2})(\d{5})(\d{4})/, "$1$2$3$4");
@@ -28,7 +28,7 @@ function maskWhatsApp(value: string) {
     }
 }
 
-function maskDate(value: string) {
+function maskDate(value: any) {
     if (value) {
         value = value.replace(/\D/g, "");
         value = value.replace(/^(\d{2})(\d{2})(\d{4})/, "$1/$2/$3");
@@ -36,7 +36,7 @@ function maskDate(value: string) {
     }
 }
 
-function maskCpfCnpj(value: string) {
+function maskCpfCnpj(value: any) {
     if (value.length < 12) {
         value = value.replace(/\D/g, "");
         value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
@@ -51,7 +51,7 @@ function maskCpfCnpj(value: string) {
     }
 }
 
-function maskCnpj(value: string) {
+function maskCnpj(value: any) {
     if (value) {
         value = value.replace(/\D/g, "");
         value = value.replace(
@@ -62,14 +62,14 @@ function maskCnpj(value: string) {
     }
 }
 
-function unMask(value: string) {
+function unMask(value: any) {
     if (value) {
         value = value.replace(/\D/g, "");
         return value;
     }
 }
 
-function maskMoney(value:string) {
+function maskMoney(value:any) {
 	var valorAlterado = value;
 	valorAlterado = valorAlterado.replace(/\D/g, ""); // Remove todos os não dígitos
 	valorAlterado = valorAlterado.replace(/(\d+)(\d{2})$/, "$1,$2"); // Adiciona a parte de centavos
@@ -79,7 +79,7 @@ function maskMoney(value:string) {
 }
 
 
-function maskMoneyDot(value:string) {
+function maskMoneyDot(value:any) {
 	var valorAlterado = value;
 	valorAlterado = valorAlterado.replace(/\D/g, ""); // Remove todos os não dígitos
 	valorAlterado = valorAlterado.replace(/(\d+)(\d{2})$/, "$1.$2"); // Adiciona a parte de centavos

@@ -19,12 +19,11 @@ class OrderController extends Controller
     {
         $search = $request->get('q');
         $query = Order::with('customer')->orderBy('id', 'DESC');
-        if ($search) { 
+        if ($search) {
             $query->where('id', 'like', '%' . $search . '%');
         }
         $orders = $query->paginate(12)->withQueryString();
         return Inertia::render('Orders/index', ['orders' => $orders]);
-    
     }
 
     /**
@@ -39,7 +38,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store( OrderRequest $request ): RedirectResponse
+    public function store(OrderRequest $request): RedirectResponse
     {
         $data = $request->all();
         $validated = $request->validated();
@@ -51,32 +50,38 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Order $order)
     {
-        //
+        $customers = Customer::get();
+        return Inertia::render('Orders/edit', ['order' => $order, 'customers' => $customers]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Order $order)
     {
-        //
+        return Redirect::route('orders.show', ['order' => $order]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Order $order, OrderRequest $request): RedirectResponse
     {
-        //
+        $data = $request->all();
+        $validated = $request->validated();
+        $order->update($data);
+        return Redirect::route('orders.index')->with(['title' => 'Editar Ordem', 'success' => 'Ordem editada com sucesso']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Order $order)
     {
-        //
+        dd('ok order');
+        $order->delete();
+        return Redirect::route('orders.index')->with(['title' => 'Excluir Ordem', 'error' => 'Ordem excluida com sucesso']);
     }
 }

@@ -9,17 +9,13 @@ import TextInput from '@/Components/TextInput';
 import TextTextarea from '@/Components/TextTextarea';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
 import { equipamento, statusOrcamento } from '@/Utils/dataSelect';
-import { maskMoney, maskMoneyDot } from '@/Utils/mask';
+import { maskMoney, maskMoneyDot, unMask } from '@/Utils/mask';
 import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import { IoHome, IoSave } from 'react-icons/io5';
 import Select from 'react-select';
 
 const Create = ({ customers }: any) => {
-
-    const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
-    const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
-    const [selectedStatus, setSelectedStatus] = useState<any>(null);
 
     const optionsCustomer = customers.map((customer: any) => ({
         value: customer.id,
@@ -41,9 +37,14 @@ const Create = ({ customers }: any) => {
         'observations': '',
     });
 
+    useEffect(() => {
+        if (data?.budget_value) {
+            setData('budget_value', maskMoneyDot(data?.budget_value));
+        }
+    }, [data])
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        setData('budget_value', maskMoneyDot(data?.budget_value));
         post(route('orders.store'), {
             onSuccess: () => reset(),
         });

@@ -116,7 +116,7 @@ const Orders = ({ orders, flash }: any) => {
                       >
                         <BiEdit size={18} />
                       </IconButton>
-                      <DeleteButton param={order.id} action="este usuário" />
+                      <DeleteButton param={order.id} action="esta ordem" />
                     </p>
                   </ATd>
                 </ATr>

@@ -8,55 +8,65 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import TextTextarea from '@/Components/TextTextarea';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { statusOrcamento } from '@/Utils/dataSelect';
+import { equipamento, statusOrcamento } from '@/Utils/dataSelect';
+import { maskMoney, maskMoneyDot, unMask } from '@/Utils/mask';
 import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import { IoHome, IoSave } from 'react-icons/io5';
 import Select from 'react-select';
 
-const Edit = ({ customers }: any) => {
-
-    const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
-    const [selectedEquipment, setSelectedEquipment] = useState<any>(null);
-    const [selectedStatus, setSelectedStatus] = useState<any>(null);
+const Edit = ({ customers, order }: any) => {
 
     const optionsCustomer = customers.map((customer: any) => ({
         value: customer.id,
         label: customer.name,
     }));
 
-
-    const { data, setData, post, errors, processing, reset, clearErrors } = useForm({
-        'customer_id': '',
-        'equipment': '', // equipamento
-        'model': '',
-        'password': '',
-        'defect': '',
-        'state_conservation': '', //estado de conservação
-        'accessories': '',
-        'budget_description': '', // descrição do orçamento
-        'budget_value': '', // valor do orçamento
-        'services_performed': '', // servicos executados
-        'parts': '',
-        'parts_value': '',
-        'service_value': '',
-        'service_cost': '', // custo
-        'delivery_forecast': '', // previsao de entrega
-        'service_status': '',
-        'delivery_date': '', // data de entrega
-        'responsible_technician': '', // tecnico
-        'observations': ''
+    const { data, setData, patch, errors, processing, reset, clearErrors } = useForm({
+        'customer_id': order.customer_id,
+        'equipment': order.equipment, // equipamento
+        'model': order.model,
+        'password': order.password,
+        'defect': order.defect,
+        'state_conservation': order.state_conservation, //estado de conservação
+        'accessories': order.accessories,
+        'budget_description': order.budget_description, // descrição do orçamento
+        'budget_value': order.budget_value.toString(), // valor do orçamento
+        'services_performed': order.services_performed, // servicos executados
+        'parts': order.parts,
+        'parts_value': order.parts_value,
+        'service_value': order.service_value,
+        'service_cost': order.service_cost, // custo
+        'delivery_forecast': order.delivery_forecast, // previsao de entrega
+        'service_status': order.service_status,
+        'delivery_date': order.delivery_date, // data de entrega
+        'responsible_technician': order.responsible_technician, // tecnico
+        'observations': order.observations
     });
-    const changeCustomer = (selected: any) => {
-        setData('customer_id',selected);
-    };
-
+    
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('orders.store'), {
-            onSuccess: () => reset(),
-        });
+        setData('budget_value', maskMoneyDot(data?.budget_value));
+        patch(route('orders.update', order?.id));
     }
+
+    useEffect(() => {
+        if (data?.budget_value) {
+            setData('budget_value', maskMoneyDot(data?.budget_value));
+        }
+    }, [])
+
+    const changeCustomer = (selected: any) => {
+        setData('customer_id', selected?.value);
+    }
+
+    const changeEquipment = (selected: any) => {
+        setData('equipment', selected?.value);
+    };
+
+    const changeServiceStatus = (selected: any) => {
+        setData('service_status', selected?.value);
+    };
 
     return (
         <Authenticated
@@ -78,17 +88,16 @@ const Edit = ({ customers }: any) => {
             <Head title="Ordens" />
             <ABoxContainer>
                 <ABoxHead>
-                    <BackButton href="customers.index">Cancelar</BackButton>
+                    <BackButton href="orders.index">Cancelar</BackButton>
                 </ABoxHead>
                 <form onSubmit={submit} autoComplete='off'>
                     <ABoxContent className='p-3'>
-                        <div className='sm:grid grid-cols-7 gap-4 sm:mt-4'>
+                        <div className='sm:grid grid-cols-8 gap-4 sm:mt-4'>
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="name" value="Cliente" />
                                 <Select
                                     options={optionsCustomer}
-                                    defaultValue={selectedCustomer}
-                                    onChange={setSelectedCustomer}
+                                    onChange={changeCustomer}
                                     placeholder="Selecione o cliente"
                                     styles={{
                                         control: (baseStyles, state) => ({
@@ -114,9 +123,8 @@ const Edit = ({ customers }: any) => {
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="equipment" value="Tipo de equipamento" />
                                 <Select
-                                    options={optionsCustomer}
-                                    defaultValue={selectedEquipment}
-                                    onChange={setSelectedEquipment}
+                                    options={equipamento}
+                                    onChange={changeEquipment}
                                     placeholder="Selecione o equipamento"
                                     styles={{
                                         control: (baseStyles, state) => ({
@@ -139,7 +147,7 @@ const Edit = ({ customers }: any) => {
                                 />
                                 <InputError className="mt-2" message={errors.equipment} />
                             </div>
-                            <div>
+                            <div className='col-span-2'>
                                 <InputLabel htmlFor="model" value="Modelo do equipamento" />
                                 <TextInput
                                     id="model"
@@ -159,7 +167,6 @@ const Edit = ({ customers }: any) => {
                                     onFocus={() => clearErrors('password')}
                                     autoComplete="password"
                                 />
-                                <InputError className="mt-2" message={errors.password} />
                             </div>
                             <div>
                                 <InputLabel htmlFor="delivery_forecast" value="Previsão de entrega" />
@@ -183,6 +190,7 @@ const Edit = ({ customers }: any) => {
                                     onChange={(e) => setData('defect', e.target.value)}
                                     autoComplete="defect"
                                 />
+                                <InputError className="mt-2" message={errors.defect} />
                             </div>
                             <div>
                                 <InputLabel htmlFor="state_conservation" value="Estado de conservação" />
@@ -221,7 +229,7 @@ const Edit = ({ customers }: any) => {
                                 <TextInput
                                     id="budget_value"
                                     className="mt-1 block w-full"
-                                    value={data.budget_value}
+                                    value={maskMoney(data.budget_value)}
                                     onChange={(e) => setData('budget_value', e.target.value)}
                                     autoComplete="budget_value"
                                 />
@@ -230,8 +238,7 @@ const Edit = ({ customers }: any) => {
                                 <InputLabel htmlFor="service_status" value="Status do orçamento" />
                                 <Select
                                     options={statusOrcamento}
-                                    defaultValue={selectedStatus}
-                                    onChange={setSelectedStatus}
+                                    onChange={changeServiceStatus}
                                     placeholder="Selecione o status"
                                     styles={{
                                         control: (baseStyles, state) => ({

@@ -38,10 +38,6 @@ const Edit = ({ customer }: any) => {
         patch(route('customers.update', customer?.id));
     }
 
-    const backPage = () => {
-        route('customers.index')
-    }
-
     return (
         <Authenticated
             header={
