@@ -8,8 +8,8 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import TextTextarea from '@/Components/TextTextarea';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { equipamento, statusOrcamento } from '@/Utils/dataSelect';
-import { maskMoney, maskMoneyDot, unMask } from '@/Utils/mask';
+import { equipamento, statusOrcamento, statusServico } from '@/Utils/dataSelect';
+import { maskMoney, maskMoneyDot } from '@/Utils/mask';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useEffect } from 'react';
 import { IoHome, IoSave } from 'react-icons/io5';
@@ -31,28 +31,32 @@ const Edit = ({ customers, order }: any) => {
         'state_conservation': order.state_conservation, //estado de conservação
         'accessories': order.accessories,
         'budget_description': order.budget_description, // descrição do orçamento
-        'budget_value': order.budget_value.toString(), // valor do orçamento
+        'budget_value': order.budget_value, // valor do orçamento
+
         'services_performed': order.services_performed, // servicos executados
         'parts': order.parts,
         'parts_value': order.parts_value,
         'service_value': order.service_value,
         'service_cost': order.service_cost, // custo
-        'delivery_forecast': order.delivery_forecast, // previsao de entrega
-        'service_status': order.service_status,
         'delivery_date': order.delivery_date, // data de entrega
         'responsible_technician': order.responsible_technician, // tecnico
+
+        'service_status': order.service_status,
+        'delivery_forecast': order.delivery_forecast, // previsao de entrega
         'observations': order.observations
     });
-    
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        setData('budget_value', maskMoneyDot(data?.budget_value));
+        // setData('budget_value', maskMoneyDot(data?.budget_value));
         patch(route('orders.update', order?.id));
     }
 
     useEffect(() => {
         if (data?.budget_value) {
-            setData('budget_value', maskMoneyDot(data?.budget_value));
+            setData((data: any) => ({ ...data, budget_value: maskMoneyDot(data?.budget_value) }));
+            setData((data: any) => ({ ...data, parts_value: maskMoneyDot(data?.parts_value) }));
+            setData((data: any) => ({ ...data, service_value: maskMoneyDot(data?.service_value) }));
+            setData((data: any) => ({ ...data, service_cost: maskMoneyDot(data?.service_cost) }));
         }
     }, [])
 
@@ -66,6 +70,10 @@ const Edit = ({ customers, order }: any) => {
 
     const changeServiceStatus = (selected: any) => {
         setData('service_status', selected?.value);
+    };
+
+    const changeResponsibleTechnician = (selected: any) => {
+        setData('responsible_technician', selected?.value);
     };
 
     return (
@@ -97,6 +105,7 @@ const Edit = ({ customers, order }: any) => {
                                 <InputLabel htmlFor="name" value="Cliente" />
                                 <Select
                                     options={optionsCustomer}
+                                    defaultValue={data?.customer_id}
                                     onChange={changeCustomer}
                                     placeholder="Selecione o cliente"
                                     styles={{
@@ -213,9 +222,9 @@ const Edit = ({ customers, order }: any) => {
                                 />
                             </div>
                         </div>
-                        <div className='sm:grid grid-cols-5 gap-4 sm:mt-4'>
+                        <div className='sm:grid grid-cols-3 gap-4 sm:mt-4'>
                             <div className='col-span-2'>
-                                <InputLabel htmlFor="budget_description" value="Descrição pré-orçamento" />
+                                <InputLabel htmlFor="budget_description" value="Descrição do orçamento" />
                                 <TextTextarea
                                     id="budget_description"
                                     className="mt-1 block w-full"
@@ -224,8 +233,8 @@ const Edit = ({ customers, order }: any) => {
                                     autoComplete="budget_description"
                                 />
                             </div>
-                            <div className='col-span-2'>
-                                <InputLabel htmlFor="budget_value" value="Valor pré-orçamento" />
+                            <div className=''>
+                                <InputLabel htmlFor="budget_value" value="Valor do orçamento" />
                                 <TextInput
                                     id="budget_value"
                                     className="mt-1 block w-full"
@@ -234,10 +243,82 @@ const Edit = ({ customers, order }: any) => {
                                     autoComplete="budget_value"
                                 />
                             </div>
+                        </div>
+
+                        <div className='sm:grid grid-cols-5 gap-4 sm:mt-4'>
+                            <div className='col-span-2'>
+                                <InputLabel htmlFor="parts" value="Peças adicionadas" />
+                                <TextInput
+                                    id="parts"
+                                    className="mt-1 block w-full"
+                                    value={data.parts}
+                                    onChange={(e) => setData('parts', e.target.value)}
+                                    autoComplete="parts"
+                                />
+                            </div>
                             <div className=''>
-                                <InputLabel htmlFor="service_status" value="Status do orçamento" />
+                                <InputLabel htmlFor="parts_value" value="Valor das peças" />
+                                <TextInput
+                                    id="parts_value"
+                                    className="mt-1 block w-full"
+                                    value={maskMoney(data.parts_value.toString())}
+                                    onChange={(e) => setData('parts_value', e.target.value)}
+                                    autoComplete="parts_value"
+                                />
+                            </div>
+                            <div className=''>
+                                <InputLabel htmlFor="service_value" value="Valor do serviço" />
+                                <TextInput
+                                    id="service_value"
+                                    className="mt-1 block w-full"
+                                    value={maskMoney(data.service_value.toString())}
+                                    onChange={(e) => setData('service_value', e.target.value)}
+                                    autoComplete="service_value"
+                                />
+                            </div>
+                            <div className=''>
+                                <InputLabel htmlFor="service_cost" value="Valor total" />
+                                <TextInput
+                                    id="service_cost"
+                                    className="mt-1 block w-full"
+                                    value={maskMoney(data.service_cost.toString())}
+                                    onChange={(e) => setData('service_cost', e.target.value)}
+                                    autoComplete="service_cost"
+                                />
+                            </div>
+                        </div>
+
+                        <div className='sm:grid grid-cols-2 gap-4 sm:mt-4'>
+                            <div className=''>
+                                <InputLabel htmlFor="responsible_technician" value="Técnico Responsável" />
                                 <Select
-                                    options={statusOrcamento}
+                                    options={statusServico}
+                                    onChange={changeResponsibleTechnician}
+                                    placeholder="Selecione o técnico"
+                                    styles={{
+                                        control: (baseStyles, state) => ({
+                                            ...baseStyles,
+                                            fontSize: '15px',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                            marginTop: '4px'
+                                        }),
+                                        dropdownIndicator: (base) => ({
+                                            ...base,
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            fontSize: '14px',
+                                        }),
+                                    }}
+                                />
+                            </div>
+                            <div className=''>
+                                <InputLabel htmlFor="service_status" value="Status da Ordem" />
+                                <Select
+                                    options={statusServico}
                                     onChange={changeServiceStatus}
                                     placeholder="Selecione o status"
                                     styles={{
@@ -261,14 +342,26 @@ const Edit = ({ customers, order }: any) => {
                                 />
                             </div>
                         </div>
-                        <div className='my-4'>
-                            <InputLabel htmlFor="observations" value="Observações" />
-                            <TextTextarea
-                                id="observations"
-                                className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
-                                value={data.observations}
-                                onChange={(e) => setData('observations', e.target.value)}
-                            />
+
+                        <div className='sm:grid grid-cols-2 gap-4 sm:mt-4'>
+                            <div className='my-4'>
+                                <InputLabel htmlFor="services_performed" value="Serviços executados" />
+                                <TextTextarea
+                                    id="services_performed"
+                                    className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
+                                    value={data.services_performed}
+                                    onChange={(e) => setData('services_performed', e.target.value)}
+                                />
+                            </div>
+                            <div className='my-4'>
+                                <InputLabel htmlFor="observations" value="Observações" />
+                                <TextTextarea
+                                    id="observations"
+                                    className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
+                                    value={data.observations}
+                                    onChange={(e) => setData('observations', e.target.value)}
+                                />
+                            </div>
                         </div>
                     </ABoxContent>
                     <ABoxFooter className='border-t'>

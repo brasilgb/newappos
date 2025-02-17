@@ -21,16 +21,16 @@ return new class extends Migration
             $table->text('state_conservation')->nullable(); //estado de conservação
             $table->text('accessories')->nullable();
             $table->text('budget_description')->nullable(); // descrição do orçamento
-            $table->float('budget_value', 16,2)->nullable(); // valor do orçamento
+            $table->decimal('budget_value', 10,2)->default(0); // valor do orçamento
             $table->tinyInteger('service_status')->nullable();
-            $table->string('delivery_forecast')->nullable(); // previsao de entrega
+            $table->date('delivery_forecast')->nullable(); // previsao de entrega
             $table->text('observations')->nullable();
             
             $table->text('services_performed')->nullable(); // servicos executados
             $table->text('parts')->nullable();
-            $table->decimal('parts_value', 10, 2)->nullable();
-            $table->decimal('service_value', 10, 2)->nullable();
-            $table->decimal('service_cost', 10, 2)->nullable(); // custo
+            $table->decimal('parts_value', 10, 2)->default(0);
+            $table->decimal('service_value', 10, 2)->default(0);
+            $table->decimal('service_cost', 10, 2)->default(0); // custo
             $table->dateTime('delivery_date')->nullable(); // data de entrega
             $table->string('responsible_technician', 50)->nullable(); // tecnico
             $table->timestamps();

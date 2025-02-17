@@ -70,6 +70,7 @@ class OrderController extends Controller
     public function update(Order $order, OrderRequest $request): RedirectResponse
     {
         $data = $request->all();
+        // dd($data);
         $validated = $request->validated();
         $order->update($data);
         return Redirect::route('orders.index')->with(['title' => 'Editar Ordem', 'success' => 'Ordem editada com sucesso']);

@@ -1,6 +1,6 @@
 import Footer from '@/Components/Footer';
 import NavBar from '@/Components/NavBar';
-import { PropsWithChildren, ReactNode, useState } from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 
 export default function Authenticated({
     children,
