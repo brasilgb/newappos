@@ -8,7 +8,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import TextTextarea from '@/Components/TextTextarea';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { equipamento, statusOrcamento, statusServico } from '@/Utils/dataSelect';
+import { equipamento, statusServico } from '@/Utils/dataSelect';
 import { maskMoney, maskMoneyDot } from '@/Utils/mask';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useEffect } from 'react';
@@ -76,6 +76,10 @@ const Edit = ({ customers, order }: any) => {
         setData('responsible_technician', selected?.value);
     };
 
+    const defaultCustomer = optionsCustomer?.filter((o:any) => o.value == order?.customer_id).map((opt:any) =>({value: opt.value, label: opt.label}));
+    const defaultEquipament = equipamento?.filter((o:any) => o.value == order?.equipment).map((opt:any) =>({value: opt.value, label: opt.label}));
+    const statusDefault = statusServico?.filter((o:any) => o.value == order?.service_status).map((opt:any) =>({value: opt.value, label: opt.label}));
+
     return (
         <Authenticated
             header={
@@ -104,8 +108,8 @@ const Edit = ({ customers, order }: any) => {
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="name" value="Cliente" />
                                 <Select
+                                    defaultValue={defaultCustomer}
                                     options={optionsCustomer}
-                                    defaultValue={data?.customer_id}
                                     onChange={changeCustomer}
                                     placeholder="Selecione o cliente"
                                     styles={{
@@ -132,6 +136,7 @@ const Edit = ({ customers, order }: any) => {
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="equipment" value="Tipo de equipamento" />
                                 <Select
+                                defaultValue={defaultEquipament}
                                     options={equipamento}
                                     onChange={changeEquipment}
                                     placeholder="Selecione o equipamento"
@@ -318,6 +323,7 @@ const Edit = ({ customers, order }: any) => {
                             <div className=''>
                                 <InputLabel htmlFor="service_status" value="Status da Ordem" />
                                 <Select
+                                    defaultValue={statusDefault}
                                     options={statusServico}
                                     onChange={changeServiceStatus}
                                     placeholder="Selecione o status"

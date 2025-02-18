@@ -71,8 +71,8 @@ const NavBar = (props: Props) => {
                                 Configurações
                             </NavLink>
                             <NavLink
-                                href={route('dashboard')}
-                                active={route().current('dashboard')}
+                                href={route('users.index')}
+                                active={route().current('users.*')}
                             >
                                 Usuários
                             </NavLink>
