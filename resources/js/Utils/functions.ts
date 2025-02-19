@@ -21,20 +21,20 @@ const statusOrdemByValue = (value: any) => {
 
 const statusUserByValue = (value: any) => {
     switch (value) {
-        case 1:
+        case 'active':
             return "Ativo";
-        case 2:
+        case 'inactive':
             return "Inativo";
     }
 };
 
 const roleUserByValue = (value: any) => {
     switch (value) {
-        case 1:
+        case 'admin':
             return "Administrador";
-        case 2:
+        case 'user':
             return "Usuário";
-        case 3:
+        case 'tech':
             return "Técnico";
     }
 };

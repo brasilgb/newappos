@@ -13,7 +13,7 @@ class Customer extends Model
         'name',
         'cpf',
         'birth',
-        'mail',
+        'email',
         'cep',
         'uf',
         'city',
@@ -25,7 +25,7 @@ class Customer extends Model
         'contact',
         'whatsapp',
         'phonecontact',
-        'obs'
+        'observations'
     ];
 
     public function orders(): HasMany

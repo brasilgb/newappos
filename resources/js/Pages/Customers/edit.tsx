@@ -18,7 +18,7 @@ const Edit = ({ customer }: any) => {
         'name': customer?.name,
         'birth': customer?.birth,
         'cpf': customer?.cpf,
-        'mail': customer?.mail,
+        'email': customer?.email,
         'cep': customer?.cep,
         'uf': customer?.uf,
         'city': customer?.city,
@@ -30,7 +30,7 @@ const Edit = ({ customer }: any) => {
         'contact': customer?.contact,
         'whatsapp': customer?.whatsapp,
         'phonecontact': customer?.phonecontact,
-        'obs': customer?.obs
+        'observations': customer?.observations
     });
 
     const submit: FormEventHandler = (e) => {
@@ -101,16 +101,16 @@ const Edit = ({ customer }: any) => {
                                 />
                             </div>
                             <div className='col-span-2'>
-                                <InputLabel htmlFor="mail" value="E-mail" />
+                                <InputLabel htmlFor="email" value="E-email" />
                                 <TextInput
-                                    id="mail"
+                                    id="email"
                                     className="mt-1 block w-full"
-                                    value={data.mail}
-                                    onChange={(e) => setData('mail', e.target.value)}
-                                    onFocus={() => clearErrors('mail')}
-                                    autoComplete="mail"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    onFocus={() => clearErrors('email')}
+                                    autoComplete="email"
                                 />
-                                <InputError className="mt-2" message={errors.mail} />
+                                <InputError className="mt-2" message={errors.email} />
                             </div>
                         </div>
                         <div className='sm:grid grid-cols-7 gap-4 sm:mt-4'>
@@ -235,12 +235,12 @@ const Edit = ({ customer }: any) => {
                             </div>
                         </div>
                         <div className='my-4'>
-                            <InputLabel htmlFor="obs" value="Observações" />
+                            <InputLabel htmlFor="observations" value="Observações" />
                             <textarea
-                                id="obs"
+                                id="observations"
                                 className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
-                                value={data.obs}
-                                onChange={(e) => setData('obs', e.target.value)}
+                                value={data.observations}
+                                onChange={(e) => setData('observations', e.target.value)}
                             />
                         </div>
                     </ABoxContent>

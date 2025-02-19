@@ -76,9 +76,9 @@ const Edit = ({ customers, order }: any) => {
         setData('responsible_technician', selected?.value);
     };
 
-    const defaultCustomer = optionsCustomer?.filter((o:any) => o.value == order?.customer_id).map((opt:any) =>({value: opt.value, label: opt.label}));
-    const defaultEquipament = equipamento?.filter((o:any) => o.value == order?.equipment).map((opt:any) =>({value: opt.value, label: opt.label}));
-    const statusDefault = statusServico?.filter((o:any) => o.value == order?.service_status).map((opt:any) =>({value: opt.value, label: opt.label}));
+    const defaultCustomer = optionsCustomer?.filter((o: any) => o.value == order?.customer_id).map((opt: any) => ({ value: opt.value, label: opt.label }));
+    const defaultEquipament = equipamento?.filter((o: any) => o.value == order?.equipment).map((opt: any) => ({ value: opt.value, label: opt.label }));
+    const statusDefault = statusServico?.filter((o: any) => o.value == order?.service_status).map((opt: any) => ({ value: opt.value, label: opt.label }));
 
     return (
         <Authenticated
@@ -108,6 +108,7 @@ const Edit = ({ customers, order }: any) => {
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="name" value="Cliente" />
                                 <Select
+                                    menuPosition='fixed'
                                     defaultValue={defaultCustomer}
                                     options={optionsCustomer}
                                     onChange={changeCustomer}
@@ -136,7 +137,8 @@ const Edit = ({ customers, order }: any) => {
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="equipment" value="Tipo de equipamento" />
                                 <Select
-                                defaultValue={defaultEquipament}
+                                    menuPosition='fixed'
+                                    defaultValue={defaultEquipament}
                                     options={equipamento}
                                     onChange={changeEquipment}
                                     placeholder="Selecione o equipamento"
@@ -297,6 +299,7 @@ const Edit = ({ customers, order }: any) => {
                             <div className=''>
                                 <InputLabel htmlFor="responsible_technician" value="Técnico Responsável" />
                                 <Select
+                                    menuPosition='fixed'
                                     options={statusServico}
                                     onChange={changeResponsibleTechnician}
                                     placeholder="Selecione o técnico"
@@ -323,6 +326,7 @@ const Edit = ({ customers, order }: any) => {
                             <div className=''>
                                 <InputLabel htmlFor="service_status" value="Status da Ordem" />
                                 <Select
+                                    menuPosition='fixed'
                                     defaultValue={statusDefault}
                                     options={statusServico}
                                     onChange={changeServiceStatus}

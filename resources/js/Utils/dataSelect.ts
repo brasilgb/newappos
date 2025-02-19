@@ -9,15 +9,15 @@ const statusServico = [
     { value: "8", label: "Entregue ao cliente" },
 ];
 
-const roleUser = [
-    { value: '1', label: "Administrador" },
-    { value: '2', label: "Usuário" },
-    { value: '3', label: "Técnico" },
+const rolesUser = [
+    { value: 'admin', label: "Administrador" },
+    { value: 'user', label: "Usuário" },
+    { value: 'tech', label: "Técnico" },
 ];
 
 const statusUser = [
-    { value: '1', label: "Ativo" },
-    { value: '2', label: "Inativo" },
+    { value: 'active', label: "Ativo" },
+    { value: 'inactive', label: "Inativo" },
 ];
 
 const movimentosProdutos = [
@@ -64,7 +64,7 @@ const equipamento = [
 export {
     statusServico,
     statusUser,
-    roleUser,
+    rolesUser,
     movimentosProdutos,
     unidadesProdutos,
     tiposProdutos,

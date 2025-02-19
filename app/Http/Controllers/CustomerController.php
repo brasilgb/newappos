@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\AddsToast;
 use App\Http\Requests\CustomerRequest;
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class CustomerController extends Controller

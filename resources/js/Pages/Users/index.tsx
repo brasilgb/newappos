@@ -3,7 +3,7 @@ import IconButton from '@/Components/IconButton';
 import SearchInput from '@/Components/SearchInput';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { IoAdd, IoConstruct, IoPeople, IoTrash } from 'react-icons/io5';
+import { IoAdd, IoConstruct, IoPeople, IoPerson, IoTrash } from 'react-icons/io5';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect } from 'react';
 import ToastMessage from '@/Components/ToastMessages/message';
@@ -15,6 +15,7 @@ import HeaderTop from '@/Components/HeaderTop';
 import { BreadCrumbTop } from '@/Components/BreadCrumbTop';
 import { maskCpfCnpj, maskPhone } from '@/Utils/mask';
 import moment from 'moment';
+import { roleUserByValue, statusUserByValue } from '@/Utils/functions';
 
 const Users = ({ users, flash }: any) => {
 
@@ -46,7 +47,7 @@ const Users = ({ users, flash }: any) => {
     <Authenticated
       header={
         <HeaderTop
-          icon={<IoPeople />}
+          icon={<IoPerson />}
           title='Usuários'
           breadcrumb={
             <BreadCrumbTop
@@ -80,7 +81,9 @@ const Users = ({ users, flash }: any) => {
               <ATr>
                 <ATh>#</ATh>
                 <ATh>Nome</ATh>
-                <ATh>E-mail</ATh>
+                <ATh>Telefone</ATh>
+                <ATh>Função</ATh>
+                <ATh>Status</ATh>
                 <ATh>Cadastro</ATh>
                 <ATh><></></ATh>
               </ATr>
@@ -90,7 +93,9 @@ const Users = ({ users, flash }: any) => {
                 <ATr key={user.id}>
                   <ATd>{user.id}</ATd>
                   <ATd>{user.name}</ATd>
-                  <ATd>{user.mail}</ATd>
+                  <ATd>{user.telephone}</ATd>
+                  <ATd>{roleUserByValue(user.roles)}</ATd>
+                  <ATd>{statusUserByValue(user.status)}</ATd>
                   <ATd>{moment(user.created_at).format("DD/MM/YYYY")}</ATd>
                   <ATd>
                     <p className='flex justify-end gap-2'>

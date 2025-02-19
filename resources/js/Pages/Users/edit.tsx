@@ -7,58 +7,65 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { maskCep, maskCpfCnpj, maskPhone } from '@/Utils/mask';
+import { rolesUser, statusUser } from '@/Utils/dataSelect';
+import { maskCep, maskCpfCnpj, maskDate, maskPhone, unMask } from '@/Utils/mask';
 import { Head, useForm } from '@inertiajs/react';
-import React, { FormEventHandler } from 'react';
-import { IoPeople, IoPerson, IoSave } from 'react-icons/io5';
+import { Eye, EyeClosed } from 'lucide-react';
+import React, { FormEventHandler, useState } from 'react';
+import { IoHome, IoPerson, IoSave } from 'react-icons/io5';
+import Select from 'react-select';
 
-const Edit = ({ customer }: any) => {
+const Create = ({user}:any) => {
+    const [showPasswordOne, setShowPasswordOne] = useState<boolean>(false);
+    const [showPasswordTwo, setShowPasswordTwo] = useState<boolean>(false);
 
     const { data, setData, patch, errors, processing, reset, clearErrors } = useForm({
-        'name': customer?.name,
-        'birth': customer?.birth,
-        'cpf': customer?.cpf,
-        'mail': customer?.mail,
-        'cep': customer?.cep,
-        'uf': customer?.uf,
-        'city': customer?.city,
-        'neighborhood': customer?.neighborhood,
-        'street': customer?.street,
-        'complement': customer?.complement,
-        'number': customer?.number,
-        'phone': customer?.phone,
-        'contact': customer?.contact,
-        'whatsapp': customer?.whatsapp,
-        'phonecontact': customer?.phonecontact,
-        'obs': customer?.obs
+        name: user?.name,
+        email: user?.email,
+        telephone: user?.telephone,
+        whatsapp: user?.whatsapp,
+        roles: user?.roles,
+        status: user?.status,
+        password: '',
+        password_confirmation: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        patch(route('customers.update', customer?.id));
+        patch(route('users.update', user.id));
+    }
+    const changeRoles = (selected: any) => {
+        setData('roles', selected?.value);
     }
 
+    const changeStatus = (selected: any) => {
+        setData('status', selected?.value);
+    }
+
+    const statusDefault = statusUser?.filter((o: any) => o.value == user?.status).map((opt: any) => ({ value: opt.value, label: opt.label }));
+    const roleDefault = rolesUser?.filter((o: any) => o.value == user?.roles).map((opt: any) => ({ value: opt.value, label: opt.label }));
+    
     return (
         <Authenticated
             header={
                 <HeaderTop
-                    icon={<IoPeople />}
-                    title='Clientes'
+                    icon={<IoPerson />}
+                    title='Usuários'
                     breadcrumb={
                         <BreadCrumbTop
                             links={[
-                                { url: "/customers", label: "Clientes" },
-                                { url: null, label: "Adicionar cliente" },
+                                { url: "/users", label: "Usuários" },
+                                { url: null, label: "Alterar usuário" },
                             ]}
                         />
                     }
                 />
             }
         >
-            <Head title="Clientes" />
+            <Head title="Usuários" />
             <ABoxContainer>
                 <ABoxHead>
-                    <BackButton href="customers.index">Cancelar</BackButton>
+                    <BackButton href="users.index">Cancelar</BackButton>
                 </ABoxHead>
                 <form onSubmit={submit} autoComplete='off'>
                     <ABoxContent className='p-3'>
@@ -76,131 +83,28 @@ const Edit = ({ customer }: any) => {
                                 />
                                 <InputError className="mt-2" message={errors.name} />
                             </div>
-                            <div>
-                                <InputLabel htmlFor="cpf" value="CPF/CNPJ" />
-                                <TextInput
-                                    id="cpf"
-                                    className="mt-1 block w-full"
-                                    value={maskCpfCnpj(data.cpf)}
-                                    onChange={(e) => setData('cpf', e.target.value)}
-                                    onFocus={() => clearErrors('cpf')}
-                                    autoComplete="cpf"
-                                    maxLength={11}
-                                />
-                                <InputError className="mt-2" message={errors.cpf} />
-                            </div>
-                            <div>
-                                <InputLabel htmlFor="birth" value="Nascimento" />
-                                <TextInput
-                                    type='date'
-                                    id="birth"
-                                    className="mt-1 block w-full"
-                                    value={data.birth}
-                                    onChange={(e) => setData('birth', e.target.value)}
-                                    autoComplete="birth"
-                                />
-                            </div>
                             <div className='col-span-2'>
-                                <InputLabel htmlFor="mail" value="E-mail" />
+                                <InputLabel htmlFor="email" value="E-mail" />
                                 <TextInput
-                                    id="mail"
+                                    id="email"
                                     className="mt-1 block w-full"
-                                    value={data.mail}
-                                    onChange={(e) => setData('mail', e.target.value)}
-                                    onFocus={() => clearErrors('mail')}
-                                    autoComplete="mail"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    onFocus={() => clearErrors('email')}
+                                    autoComplete="email"
                                 />
-                                <InputError className="mt-2" message={errors.mail} />
-                            </div>
-                        </div>
-                        <div className='sm:grid grid-cols-7 gap-4 sm:mt-4'>
-                            <div>
-                                <InputLabel htmlFor="cep" value="CEP" />
-                                <TextInput
-                                    id="cep"
-                                    className="mt-1 block w-full"
-                                    value={maskCep(data.cep)}
-                                    onChange={(e) => setData('cep', e.target.value)}
-                                    autoComplete="cep"
-                                    maxLength={9}
-                                />
+                                <InputError className="mt-2" message={errors.email} />
                             </div>
                             <div>
-                                <InputLabel htmlFor="uf" value="UF" />
+                                <InputLabel htmlFor="telephone" value="Telefone" />
                                 <TextInput
-                                    id="uf"
+                                    id="telephone"
                                     className="mt-1 block w-full"
-                                    value={data.uf}
-                                    onChange={(e) => setData('uf', e.target.value)}
-                                    autoComplete="uf"
-                                />
-                            </div>
-                            <div className='col-span-3'>
-                                <InputLabel htmlFor="city" value="Cidade" />
-                                <TextInput
-                                    id="city"
-                                    className="mt-1 block w-full"
-                                    value={data.city}
-                                    onChange={(e) => setData('city', e.target.value)}
-                                    autoComplete="city"
-                                />
-                            </div>
-                            <div className='col-span-2'>
-                                <InputLabel htmlFor="neighborhood" value="Bairro" />
-                                <TextInput
-                                    id="neighborhood"
-                                    className="mt-1 block w-full"
-                                    value={data.neighborhood}
-                                    onChange={(e) => setData('neighborhood', e.target.value)}
-                                    autoComplete="neighborhood"
-                                />
-                            </div>
-                        </div>
-                        <div className='sm:grid grid-cols-5 gap-4 sm:mt-4'>
-                            <div className='col-span-2'>
-                                <InputLabel htmlFor="street" value="Logradouro" />
-                                <TextInput
-                                    id="street"
-                                    className="mt-1 block w-full"
-                                    value={data.street}
-                                    onChange={(e) => setData('street', e.target.value)}
-                                    autoComplete="street"
-                                />
-                            </div>
-                            <div className='col-span-2'>
-                                <InputLabel htmlFor="complement" value="Complemento" />
-                                <TextInput
-                                    id="complement"
-                                    className="mt-1 block w-full"
-                                    value={data.complement}
-                                    onChange={(e) => setData('complement', e.target.value)}
-                                    autoComplete="complement"
-                                />
-                            </div>
-                            <div className=''>
-                                <InputLabel htmlFor="number" value="Número" />
-                                <TextInput
-                                    id="number"
-                                    className="mt-1 block w-full"
-                                    value={data.number}
-                                    onChange={(e) => setData('number', e.target.value)}
-                                    autoComplete="number"
-                                />
-                            </div>
-                        </div>
-                        <div className='sm:grid grid-cols-5 gap-4 sm:mt-4'>
-                            <div>
-                                <InputLabel htmlFor="phone" value="Telefone" />
-                                <TextInput
-                                    id="phone"
-                                    className="mt-1 block w-full"
-                                    value={maskPhone(data.phone)}
-                                    onChange={(e) => setData('phone', e.target.value)}
-                                    onFocus={() => clearErrors('phone')}
-                                    autoComplete="phone"
+                                    value={maskPhone(data.telephone)}
+                                    onChange={(e) => setData('telephone', e.target.value)}
+                                    autoComplete="telephone"
                                     maxLength={15}
                                 />
-                                <InputError className="mt-2" message={errors.phone} />
                             </div>
                             <div>
                                 <InputLabel htmlFor="whatsapp" value="WhatsApp" />
@@ -209,39 +113,119 @@ const Edit = ({ customer }: any) => {
                                     className="mt-1 block w-full"
                                     value={data.whatsapp}
                                     onChange={(e) => setData('whatsapp', e.target.value)}
+                                    onFocus={() => clearErrors('whatsapp')}
                                     autoComplete="whatsapp"
-                                />
-                            </div>
-                            <div className='col-span-2'>
-                                <InputLabel htmlFor="contact" value="Contato" />
-                                <TextInput
-                                    id="contact"
-                                    className="mt-1 block w-full"
-                                    value={data.contact}
-                                    onChange={(e) => setData('contact', e.target.value)}
-                                    autoComplete="contact"
-                                />
-                            </div>
-                            <div>
-                                <InputLabel htmlFor="phonecontact" value="Tel. Contato" />
-                                <TextInput
-                                    id="phonecontact"
-                                    className="mt-1 block w-full"
-                                    value={maskPhone(data.phonecontact)}
-                                    onChange={(e) => setData('phonecontact', e.target.value)}
-                                    autoComplete="phonecontact"
-                                    maxLength={15}
+                                    maxLength={13}
                                 />
                             </div>
                         </div>
-                        <div className='my-4'>
-                            <InputLabel htmlFor="obs" value="Observações" />
-                            <textarea
-                                id="obs"
-                                className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 mt-1 block w-full"
-                                value={data.obs}
-                                onChange={(e) => setData('obs', e.target.value)}
-                            />
+                        <div className='sm:grid grid-cols-2 gap-4 sm:mt-4'>
+                            <div>
+                                <InputLabel htmlFor="password" value="Senha" />
+                                <div className='relative'>
+                                    <TextInput
+                                        id="password"
+                                        className="mt-1 block w-full"
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        onFocus={() => clearErrors('password')}
+                                        autoComplete="password"
+                                        type={showPasswordOne ? 'text' : 'password'}
+                                    />
+                                    <div className='absolute top-2.5 right-2 text-gray-600'>
+                                        <button
+                                            type='button'
+                                            onClick={() => setShowPasswordOne(!showPasswordOne)}
+                                        >
+                                            {showPasswordOne ? <EyeClosed /> : <Eye />}
+                                        </button>
+                                    </div>
+                                </div>
+                                <InputError className="mt-2" message={errors.password} />
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="password_confirmation" value="Repita a Senha" />
+                                <div className='relative'>
+                                <TextInput
+                                    id="password_confirmation"
+                                    className="mt-1 block w-full"
+                                    value={data.password_confirmation}
+                                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                                    onFocus={() => clearErrors('password_confirmation')}
+                                    autoComplete="password_confirmation"
+                                    type={showPasswordTwo ? 'text' : 'password'}
+                                />
+                                <div className='absolute top-2.5 right-2 text-gray-600'>
+                                    <button
+                                        type='button'
+                                        onClick={() => setShowPasswordTwo(!showPasswordTwo)}
+                                    >
+                                        {showPasswordTwo ? <EyeClosed /> : <Eye />}
+                                    </button>
+                                </div>
+                            </div>
+                                <InputError className="mt-2" message={errors.password_confirmation} />
+                            </div>
+                        </div>
+                        <div className='sm:grid grid-cols-2 gap-4 sm:mt-4'>
+                            <div>
+                                <InputLabel htmlFor="equipment" value="Função do usuário" />
+                                <Select
+                                    menuPosition='fixed'
+                                    defaultValue={roleDefault}
+                                    options={rolesUser}
+                                    onChange={changeRoles}
+                                    placeholder="Selecione o função"
+                                    styles={{
+                                        control: (baseStyles, state) => ({
+                                            ...baseStyles,
+                                            fontSize: '15px',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                            marginTop: '4px'
+                                        }),
+                                        dropdownIndicator: (base) => ({
+                                            ...base,
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            fontSize: '14px',
+                                        }),
+                                    }}
+                                />
+                                <InputError className="mt-2" message={errors.roles} />
+                            </div>
+                            <div>
+                                <InputLabel htmlFor="equipment" value="Status do usuário" />
+                                <Select
+                                    menuPosition='fixed'
+                                    defaultValue={statusDefault}
+                                    options={statusUser}
+                                    onChange={changeStatus}
+                                    placeholder="Selecione o status"
+                                    styles={{
+                                        control: (baseStyles, state) => ({
+                                            ...baseStyles,
+                                            fontSize: '15px',
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                            marginTop: '4px'
+                                        }),
+                                        dropdownIndicator: (base) => ({
+                                            ...base,
+                                            paddingTop: '2.5px',
+                                            paddingBottom: '2.5px',
+                                        }),
+                                        menuList: (base) => ({
+                                            ...base,
+                                            fontSize: '14px',
+                                        }),
+                                    }}
+                                />
+                                <InputError className="mt-2" message={errors.status} />
+                            </div>
                         </div>
                     </ABoxContent>
                     <ABoxFooter className='border-t'>
@@ -255,4 +239,4 @@ const Edit = ({ customer }: any) => {
     )
 }
 
-export default Edit;
+export default Create;

@@ -90,6 +90,7 @@ const Create = ({ customers }: any) => {
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="name" value="Cliente" />
                                 <Select
+                                    menuPosition='fixed'
                                     options={optionsCustomer}
                                     onChange={changeCustomer}
                                     placeholder="Selecione o cliente"
@@ -117,6 +118,7 @@ const Create = ({ customers }: any) => {
                             <div className='col-span-2'>
                                 <InputLabel htmlFor="equipment" value="Tipo de equipamento" />
                                 <Select
+                                    menuPosition='fixed'
                                     options={equipamento}
                                     onChange={changeEquipment}
                                     placeholder="Selecione o equipamento"
@@ -231,6 +233,7 @@ const Create = ({ customers }: any) => {
                             <div className=''>
                                 <InputLabel htmlFor="service_status" value="Status do orçamento" />
                                 <Select
+                                    menuPosition='fixed'
                                     options={statusOrcamento}
                                     onChange={changeServiceStatus}
                                     placeholder="Selecione o status"

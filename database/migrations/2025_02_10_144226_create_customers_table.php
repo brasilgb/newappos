@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('cpf', 50)->nullable();
             $table->date('birth')->nullable();
-            $table->string('mail', 50)->nullable();
+            $table->string('email', 50)->nullable();
             $table->string('cep', 20)->nullable();
             $table->string('uf', 20)->nullable();
             $table->string('city', 50)->nullable();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('contact', 50)->nullable();
             $table->string('whatsapp', 50)->nullable();
             $table->string('phonecontact', 20)->nullable();
-            $table->text('obs')->nullable();
+            $table->text('observations')->nullable();
             $table->timestamps();
         });
     }
