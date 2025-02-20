@@ -17,6 +17,7 @@ import { maskCnpj, maskCpfCnpj, maskPhone } from '@/Utils/mask';
 import moment from 'moment';
 import { statusOrdemByValue } from '@/Utils/functions';
 import { colorStatus } from '@/Components/colors';
+import DeleteModal from '@/Components/DeleteModal';
 
 const Orders = ({ orders, flash }: any) => {
 
@@ -65,7 +66,7 @@ const Orders = ({ orders, flash }: any) => {
       <ABoxContainer>
         <ABoxHead>
           <div>
-            <SearchInput placeholder="Buscar por ordem" url="ordens.index" />
+            <SearchInput placeholder="Buscar por ( ordem, cliente ou cpf/cnpj)" url="orders.index" />
           </div>
           <div>
             <IconButton
@@ -116,7 +117,7 @@ const Orders = ({ orders, flash }: any) => {
                       >
                         <BiEdit size={18} />
                       </IconButton>
-                      <DeleteButton param={order.id} action="esta ordem" />
+                      <DeleteModal param={order.id} action="esta ordem" routerName="orders" />
                     </p>
                   </ATd>
                 </ATr>

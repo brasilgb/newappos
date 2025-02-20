@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderRequest extends FormRequest
+class ScheduleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,11 @@ class OrderRequest extends FormRequest
     {
         return [
             'customer_id' => 'required',
-            'equipment' => 'required',
-            'defect' => 'required',
+            'user_id' => 'required',
+            'schedules' => 'required',
+            'service' => 'required',
+            'details' => 'required',
+            'status' => 'required',
         ];
     }
     
@@ -32,8 +35,10 @@ class OrderRequest extends FormRequest
     {
         return [
             'customer_id' => 'cliente',
-            'equipment' => 'equipamento',
-            'defect' => 'defeito',
+            'user_id' => 'técnico',
+            'schedules' => 'equipamento',
+            'service' => 'serviço',
+            'details' => 'detalhes',
         ];
     }
 }

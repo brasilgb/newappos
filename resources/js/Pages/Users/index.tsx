@@ -16,6 +16,7 @@ import { BreadCrumbTop } from '@/Components/BreadCrumbTop';
 import { maskCpfCnpj, maskPhone } from '@/Utils/mask';
 import moment from 'moment';
 import { roleUserByValue, statusUserByValue } from '@/Utils/functions';
+import DeleteModal from '@/Components/DeleteModal';
 
 const Users = ({ users, flash }: any) => {
 
@@ -100,18 +101,12 @@ const Users = ({ users, flash }: any) => {
                   <ATd>
                     <p className='flex justify-end gap-2'>
                       <IconButton
-                        variant="order"
-                        href={route('users.edit', user.id)}
-                      >
-                        <IoConstruct size={18} />
-                      </IconButton>
-                      <IconButton
                         variant="edit"
                         href={route('users.edit', user.id)}
                       >
                         <BiEdit size={18} />
                       </IconButton>
-                      <DeleteButton param={user.id} action="este usuário" />
+                      <DeleteModal param={user.id} action="este usuário" routerName="users" />
                     </p>
                   </ATd>
                 </ATr>

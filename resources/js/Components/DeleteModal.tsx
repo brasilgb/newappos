@@ -5,9 +5,16 @@ import Modal from "./Modal";
 import { useForm } from "@inertiajs/react";
 import { IoTrash } from "react-icons/io5";
 
+interface DeleteModalProps {
+    param: number;
+    action: string;
+    routerName: string;
+}
+
 export default function DeleteModal({
     param,
-    action
+    action,
+    routerName
 }: any) {
 
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
@@ -23,7 +30,7 @@ export default function DeleteModal({
 
     const deleteUser: FormEventHandler = (e) => {
         e.preventDefault();
-        destroy(route('customers.destroy',  param ), {
+        destroy(route(`${routerName}.destroy`,  param ), {
             preserveScroll: true,
             onSuccess: () => closeModal()
         });

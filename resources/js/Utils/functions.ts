@@ -42,11 +42,11 @@ const roleUserByValue = (value: any) => {
 const statusAgendaByValue = (value: any) => {
     switch (value) {
         case 1:
-            return "Aberta";
+            return "Agenda Aberta";
         case 2:
-            return "Atendimento";
+            return "Em Atendimento";
         case 3:
-            return "Fechada";
+            return "Agenda Fechada";
     }
 };
 const statusMessageByValue = (value: any) => {

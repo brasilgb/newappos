@@ -23,9 +23,18 @@ class CustomerRequest extends FormRequest
     {
         return [
             'name'  => 'required',
-            'cpf'   => ($this->getMethod() == 'POST') ? 'required|cpf_ou_cnpj|unique:customers' : 'required|cpf_ou_cnpj|unique:customers,cpf,'. $this->customer->id,
-            'email'  => ($this->getMethod() == 'POST') ? 'required|unique:customers' : 'required|unique:customers,email,'. $this->customer->id,
+            'cpf'   => ($this->getMethod() == 'POST') ? 'required|cpf_ou_cnpj|unique:customers' : 'required|cpf_ou_cnpj|unique:customers,cpf,' . $this->customer->id,
+            'email'  => ($this->getMethod() == 'POST') ? 'required|unique:customers' : 'required|unique:customers,email,' . $this->customer->id,
             'phone' => 'required'
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => 'nome',
+            'phone' => 'telefone',
+            'email' => 'e-mail',
         ];
     }
 }

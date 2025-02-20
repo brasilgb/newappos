@@ -41,7 +41,7 @@ class UserController extends Controller
     {
         $data = $request->all();
         $validate = $request->validated();
-        $data['id'] = User::latest()->first()->id + 1;
+        $data['id'] = User::exists() ? User::latest()->first()->id + 1 : 1;
         User::create($data);
         return Redirect::route('users.index')->with(['title' => 'Cadastra Usuário', 'success' => 'Usuário cadastrado com sucesso']);
     }

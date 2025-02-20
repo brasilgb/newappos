@@ -41,7 +41,7 @@ class CustomerController extends Controller
     {
         $data = $request->all();
         $validated = $request->validated();
-        $data['id'] = Customer::latest()->first()->id + 1;
+        $data['id'] = Customer::exists() ? Customer::latest()->first()->id + 1 : 1;
         Customer::create($data);
         return Redirect::route('customers.index')->with(['title' => 'Cadastra Cliente', 'success' => 'Cliente cadastrado com sucesso']);
     }

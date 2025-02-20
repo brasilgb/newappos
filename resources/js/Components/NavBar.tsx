@@ -41,14 +41,8 @@ const NavBar = (props: Props) => {
                                 Ordens
                             </NavLink>
                             <NavLink
-                                href={route('dashboard')}
-                                active={route().current('dashboard')}
-                            >
-                                Orçamento
-                            </NavLink>
-                            <NavLink
-                                href={route('dashboard')}
-                                active={route().current('dashboard')}
+                                href={route('schedule.index')}
+                                active={route().current('schedule.*')}
                             >
                                 Agenda
                             </NavLink>
@@ -63,6 +57,12 @@ const NavBar = (props: Props) => {
                                 active={route().current('dashboard')}
                             >
                                 Cadastros
+                            </NavLink>
+                            <NavLink
+                                href={route('dashboard')}
+                                active={route().current('dashboard')}
+                            >
+                                Orçamento
                             </NavLink>
                             <NavLink
                                 href={route('dashboard')}

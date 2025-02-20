@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderRequest;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -18,11 +19,17 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('q');
-        $query = Order::with('customer')->orderBy('id', 'DESC');
+        $query = Order::orderBy('id', 'DESC');
         if ($search) {
-            $query->where('id', 'like', '%' . $search . '%');
+            $query = Order::where(function ($query) use ($search) {
+                $query->where('id', 'like', '%' . $search . '%');
+            })
+            ->orWhereHas('customer', function($query) use ($search) {
+                $query->where('name', 'like', "%$search%")
+                ->orWhere('cpf', 'like', '%' . $search . '%');
+            });
         }
-        $orders = $query->paginate(12)->withQueryString();
+        $orders = $query->with('customer')->paginate(12);
         return Inertia::render('Orders/index', ['orders' => $orders]);
     }
 
@@ -32,7 +39,8 @@ class OrderController extends Controller
     public function create()
     {
         $customers = Customer::get();
-        return Inertia::render('Orders/create', ['customers' => $customers]);
+        $technicals = User::where('roles', 'tech')->orWhere('roles', 'admin')->where('status', 1)->get();
+        return Inertia::render('Orders/create', ['customers' => $customers, 'technicals' => $technicals]);
     }
 
     /**
@@ -53,7 +61,8 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $customers = Customer::get();
-        return Inertia::render('Orders/edit', ['order' => $order, 'customers' => $customers]);
+        $technicals = User::where('roles', 'tech')->orWhere('roles', 'admin')->where('status', 1)->get();
+        return Inertia::render('Orders/edit', ['order' => $order, 'customers' => $customers, 'technicals' => $technicals]);
     }
 
     /**
@@ -81,7 +90,6 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        dd('ok order');
         $order->delete();
         return Redirect::route('orders.index')->with(['title' => 'Excluir Ordem', 'error' => 'Ordem excluida com sucesso']);
     }

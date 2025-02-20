@@ -6,11 +6,13 @@ interface AppContextProps {
     children: ReactNode;
 }
 export const AppProvider = ( {children }: AppContextProps ) => {
-const [teste, setTeste] = useState('testado');
+    const [filterDate, setFilterDate] = useState<Date>(new Date);
+
     return (
-        <AppContext.Provider 
-        value={{ teste }}
-        >
+        <AppContext.Provider  value={{ 
+            setFilterDate, 
+            filterDate
+        }}>
         {children}
         </AppContext.Provider>
     )

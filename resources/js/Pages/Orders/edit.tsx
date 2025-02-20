@@ -15,13 +15,16 @@ import { FormEventHandler, useEffect } from 'react';
 import { IoHome, IoSave } from 'react-icons/io5';
 import Select from 'react-select';
 
-const Edit = ({ customers, order }: any) => {
+const Edit = ({ customers, technicals, order }: any) => {
 
     const optionsCustomer = customers.map((customer: any) => ({
         value: customer.id,
         label: customer.name,
     }));
-
+    const optionsTechnical = technicals.map((technical: any) => ({
+        value: technical.id,
+        label: technical.name,
+    }));
     const { data, setData, patch, errors, processing, reset, clearErrors } = useForm({
         'customer_id': order.customer_id,
         'equipment': order.equipment, // equipamento
@@ -79,7 +82,8 @@ const Edit = ({ customers, order }: any) => {
     const defaultCustomer = optionsCustomer?.filter((o: any) => o.value == order?.customer_id).map((opt: any) => ({ value: opt.value, label: opt.label }));
     const defaultEquipament = equipamento?.filter((o: any) => o.value == order?.equipment).map((opt: any) => ({ value: opt.value, label: opt.label }));
     const statusDefault = statusServico?.filter((o: any) => o.value == order?.service_status).map((opt: any) => ({ value: opt.value, label: opt.label }));
-
+    const defaultTechnical = optionsTechnical?.filter((o: any) => o.value == order?.responsible_technician).map((opt: any) => ({ value: opt.value, label: opt.label }));
+    
     return (
         <Authenticated
             header={
@@ -300,7 +304,8 @@ const Edit = ({ customers, order }: any) => {
                                 <InputLabel htmlFor="responsible_technician" value="Técnico Responsável" />
                                 <Select
                                     menuPosition='fixed'
-                                    options={statusServico}
+                                    defaultValue={defaultTechnical}
+                                    options={optionsTechnical}
                                     onChange={changeResponsibleTechnician}
                                     placeholder="Selecione o técnico"
                                     styles={{
