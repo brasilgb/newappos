@@ -16,7 +16,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->get('q');
+        $search = $request->get('search');
         $query = Customer::orderBy('id', 'DESC');
         if ($search) { 
             $query->where('name', 'like', '%' . $search . '%')

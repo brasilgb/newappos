@@ -17,7 +17,7 @@ import Select from 'react-select';
 import { FaFilter } from "react-icons/fa6"
 import TextInput from "../TextInput"
 
-export function DatePicker({ url, select }: any) {
+export function DataFilter({ url, select }: any) {
   const { setFilterDate, filterDate } = useAppContext();
 
   const [date, setDate] = useState<Date>();
@@ -36,8 +36,6 @@ export function DatePicker({ url, select }: any) {
 
   function handleSubmit(e: any) {
     e.preventDefault();
-    console.log(data);
-
     get(route(url));
   }
 
@@ -51,12 +49,15 @@ export function DatePicker({ url, select }: any) {
       className="flex items-center justify-start gap-2"
     >
       <TextInput
-        type="date"
+        type="text"
         id="model"
-        className="mt-1 block w-full"
+        className="block w-64 h-10"
         value={data.dt}
         onChange={(e) => setData('dt', e.target.value)}
-        autoComplete="model"
+        onFocus={(e) => (e.target.type = "date")}
+        onBlur={(e) => (e.target.type = "text")}
+        autoComplete="dt"
+        placeholder={moment().format("DD/MM/YYYY")}
       />
 
       <Select

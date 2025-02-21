@@ -18,8 +18,17 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->get('q');
+        $search = $request->get('search');
+        $sdate = $request->get('dt');
+        $status = $request->get('st');
+
         $query = Order::orderBy('id', 'DESC');
+        if ($sdate) {
+            $query->whereDate('schedules', $sdate);
+        }
+        if ($status) {
+            $query->where('service_status', 'like', "%$status%");
+        }
         if ($search) {
             $query = Order::where(function ($query) use ($search) {
                 $query->where('id', 'like', '%' . $search . '%');

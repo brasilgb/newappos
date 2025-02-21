@@ -18,6 +18,8 @@ import moment from 'moment';
 import { statusOrdemByValue } from '@/Utils/functions';
 import { colorStatus } from '@/Components/colors';
 import DeleteModal from '@/Components/DeleteModal';
+import { DataFilter } from '@/Components/Calendar/DataFilter';
+import { statusServico } from '@/Utils/dataSelect';
 
 const Orders = ({ orders, flash }: any) => {
 
@@ -67,6 +69,9 @@ const Orders = ({ orders, flash }: any) => {
         <ABoxHead>
           <div>
             <SearchInput placeholder="Buscar por ( ordem, cliente ou cpf/cnpj)" url="orders.index" />
+          </div>
+          <div>
+          <DataFilter select={statusServico} url="orders.index" />
           </div>
           <div>
             <IconButton

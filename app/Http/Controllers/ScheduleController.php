@@ -18,22 +18,22 @@ class ScheduleController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->get('q');
+        $search = $request->get('search');
         $sdate = $request->get('dt');
         $status = $request->get('st');
 
         $query = Schedule::orderBy('id', 'DESC');
-        if($sdate) {
+
+        if ($sdate) {
             $query->whereDate('schedules', $sdate);
         }
-        if($status) {
+        if ($status) {
             $query->where('status', 'like', "%$status%");
         }
         if ($search) {
             $query = Schedule::where(function ($query) use ($search) {
                 $query->where('id', 'like', "%$search%")
-                    ->orWhere('service', 'like', "%$search%")
-                    ->orWhere('schedules', 'like', "%$search%");
+                    ->orWhere('service', 'like', "%$search%");
             })
                 ->orWhereHas('customer', function ($query) use ($search) {
                     $query->where('name', 'like', "%$search%");
